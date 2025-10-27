@@ -119,7 +119,7 @@ st.markdown("""
     FluX-Tape Artist Dashboard
   </h1>
   <h3 style="font-family:'Inter', sans-serif; font-weight:400; color:#8b92a8; font-size:16px; margin-top:0; letter-spacing:0.5px;">
-    Upload Your Stems & Let The Music Flow
+    Turn Your Songs Into Probability Clouds
   </h3>
 </div>
 """, unsafe_allow_html=True)
