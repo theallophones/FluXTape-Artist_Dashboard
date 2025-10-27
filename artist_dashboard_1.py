@@ -1,4 +1,3 @@
-
 import streamlit as st
 from datetime import datetime
 
@@ -116,10 +115,10 @@ if 'uploads' not in st.session_state:
 st.markdown("""
 <div style="text-align:center; margin-bottom:40px;">
   <h1 style="font-family:'Inter', sans-serif; font-weight:800; color:#ffffff; font-size:48px; margin-bottom:5px; letter-spacing:-1px;">
-    FluX-Tape Artist Dashboard
+    FluX-Tape / Artist Dashboard
   </h1>
   <h3 style="font-family:'Inter', sans-serif; font-weight:400; color:#8b92a8; font-size:16px; margin-top:0; letter-spacing:0.5px;">
-    Turn Your Songs Into Probability Clouds
+    Turn Your Song into a Probability Cloud
   </h3>
 </div>
 """, unsafe_allow_html=True)
@@ -240,19 +239,19 @@ with col1:
         st.markdown("<p style='color:#8b92a8;'>Upload different spatial mixes (narrow/wide stereo imaging)</p>", unsafe_allow_html=True)
         
         st.markdown("**Narrow Mix (60s Vibe)**")
-        for section in sections:
+        for s_idx, section in enumerate(sections):
             narrow_file = st.file_uploader(
                 f"{section}",
                 type=["wav", "aiff", "mp3"],
-                key=f"narrow_{section}"
+                key=f"narrow_{section}_{s_idx}"
             )
         
         st.markdown("**Wide Mix (Modern)**")
-        for section in sections:
+        for s_idx, section in enumerate(sections):
             wide_file = st.file_uploader(
                 f"{section}",
                 type=["wav", "aiff", "mp3"],
-                key=f"wide_{section}"
+                key=f"wide_{section}_{s_idx}"
             )
 
 with col2:
