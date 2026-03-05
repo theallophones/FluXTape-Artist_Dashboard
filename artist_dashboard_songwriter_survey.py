@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime
 
-st.set_page_config(layout="wide", page_title="FluXTape Artist Dashboard", page_icon="🎚️")
+st.set_page_config(layout="wide", page_title="FluXTape Artist Dashboard (Demo)", page_icon="🎚️")
 
 # Custom CSS matching REF 7 aesthetic
 st.markdown("""
@@ -28,6 +28,24 @@ footer {visibility: hidden;}
 h1, h2, h3 {
   color: #ffffff !important;
   font-family: 'Inter', sans-serif !important;
+}
+
+.demo-banner {
+  background: rgba(251, 192, 45, 0.15);
+  border: 2px solid #FBC02D;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.help-tooltip {
+  background: rgba(95, 107, 255, 0.1);
+  border-left: 4px solid #5f6bff;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-size: 13px;
 }
 
 .upload-section {
@@ -113,7 +131,7 @@ if 'uploads' not in st.session_state:
 
 # Header
 st.markdown("""
-<div style="text-align:center; margin-bottom:40px;">
+<div style="text-align:center; margin-bottom:30px;">
   <h1 style="font-family:'Inter', sans-serif; font-weight:800; color:#ffffff; font-size:48px; margin-bottom:5px; letter-spacing:-1px;">
     FluX-Tape / Artist Dashboard
   </h1>
@@ -123,7 +141,24 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Artist Info Section
+# DEMO BANNER
+st.markdown("""
+<div class="demo-banner">
+  <h3 style="color:#FBC02D; font-size:20px; margin-bottom:10px;">⚠️ DEMO PROTOTYPE</h3>
+  <p style="color:#8b92a8; font-size:14px; margin:0;">
+    This is a demonstration interface. Files you upload here are <strong>not saved</strong>.<br>
+    Complete the survey to get access to a fully functional version for testing.
+  </p>
+</div>
+""", unsafe_allow_html=True)
+
+# Artist Info Section with tooltip
+st.markdown("""
+<div class="help-tooltip">
+  💡 <strong>Basic Track Info:</strong> Fill in details about your song. This helps organize your stems and sets the contributor period (how long fans can submit versions).
+</div>
+""", unsafe_allow_html=True)
+
 col1, col2, col3 = st.columns([2, 1, 1])
 with col1:
     st.text_input("Artist Name", value="Zlisterr", key="artist_name")
@@ -135,7 +170,8 @@ with col2:
 
 with col3:
     st.number_input("BPM", min_value=60, max_value=200, value=120, key="bpm")
-    st.number_input("Contributor Period (Days)", min_value=1, max_value=60, value=14, key="contributor_days")
+    st.number_input("Contributor Period (Days)", min_value=1, max_value=60, value=14, key="contributor_days", 
+                    help="How many days contributors can submit their versions")
 
 # Guidelines
 st.markdown("""
@@ -144,15 +180,22 @@ st.markdown("""
   <ul style="color:#8b92a8; font-size:14px; line-height:1.8;">
     <li><strong>Same Length:</strong> All stems must be the exact same duration</li>
     <li><strong>Section Division:</strong> Organize by song sections (verse, chorus, bridge, etc.)</li>
-    <li><strong>Mixing:</strong> Avoid heavy master-bus processing - leave headroom for the adaptive AI mixing engine</li>
+    <li><strong>Mixing:</strong> Avoid heavy master-bus processing - leave headroom for the adaptive mixing engine</li>
     <li><strong>Format:</strong> WAV or AIFF, 24-bit, 48kHz minimum</li>
     <li><strong>Naming:</strong> Use format: [Feature]_[Section]_[Version] (e.g., "Vocals_Verse1_A.wav")</li>
   </ul>
 </div>
 """, unsafe_allow_html=True)
 
-# Song Structure
+# Song Structure with tooltip
 st.markdown("<h2 style='margin-top:40px;'>Song Structure</h2>", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="help-tooltip">
+  💡 <strong>How this works:</strong> Define your song's structure (verse, chorus, etc.). Each section can have multiple stem versions. Contributors will mix and match these to create their own take on your song.
+</div>
+""", unsafe_allow_html=True)
+
 st.markdown("<p style='color:#8b92a8;'>Define your song sections in order</p>", unsafe_allow_html=True)
 
 num_sections = st.number_input("Number of Sections", min_value=1, max_value=10, value=4, key="num_sections")
@@ -171,18 +214,36 @@ for i in range(num_sections):
 # Features and Upload Areas
 st.markdown("<h2 style='margin-top:40px;'>Upload Stems by Feature</h2>", unsafe_allow_html=True)
 
+st.markdown("""
+<div class="help-tooltip">
+  💡 <strong>Stems by Feature:</strong> Upload different musical elements separately. Each feature can have multiple versions (e.g., Lyrics A, B, C). Contributors will mix these to create their version.
+</div>
+""", unsafe_allow_html=True)
+
 features = [
-    ("🎤 VOCALS (LYRICS)", "vocals", "Main vocal tracks with lyrics - upload alternate lyric versions"),
-    ("🥁 GROOVE", "groove", "Drum patterns and rhythmic elements - upload alternate groove sections"),
-    ("🎸 SOLO", "solo", "Lead instrument solos - upload different takes"),
-    ("🎹 INSTRUMENTAL BED", "instrumental", "Harmonic foundation (keys, bass, pads, etc.)"),
-    ("🎵 BACKING VOCALS", "backing_vocals", "Background vocals, harmonies, ad-libs"),
+    ("🎤 VOCALS (LYRICS)", "vocals", "Main vocal tracks with lyrics - upload alternate lyric versions", 
+     "Upload different lyrical takes here. Listeners can switch between versions while streaming."),
+    ("🥁 GROOVE", "groove", "Drum patterns and rhythmic elements - upload alternate groove sections",
+     "Different drum patterns or rhythmic variations. Contributors can swap these to change the feel."),
+    ("🎸 SOLO", "solo", "Lead instrument solos - upload different takes",
+     "Multiple solo takes. Each listener might hear a different solo on each playthrough."),
+    ("🎹 INSTRUMENTAL BED", "instrumental", "Harmonic foundation (keys, bass, pads, etc.)",
+     "The harmonic core of your song. Upload alternate arrangements or instrumentation."),
+    ("🎵 BACKING VOCALS", "backing_vocals", "Background vocals, harmonies, ad-libs",
+     "Background vocals and harmonies. Contributors can toggle these on/off or swap versions."),
 ]
 
-for feature_name, feature_key, description in features:
+for feature_name, feature_key, description, tooltip in features:
     with st.expander(f"**{feature_name}**", expanded=False):
         st.markdown(f"<div class='section-header'>{feature_name}</div>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color:#8b92a8; font-size:14px; margin-bottom:20px;'>{description}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color:#8b92a8; font-size:14px; margin-bottom:10px;'>{description}</p>", unsafe_allow_html=True)
+        
+        # Feature-specific tooltip
+        st.markdown(f"""
+        <div class="help-tooltip">
+          💡 {tooltip}
+        </div>
+        """, unsafe_allow_html=True)
         
         # Number of versions for this feature
         num_versions = st.number_input(
@@ -190,7 +251,8 @@ for feature_name, feature_key, description in features:
             min_value=1,
             max_value=5,
             value=1,
-            key=f"{feature_key}_versions"
+            key=f"{feature_key}_versions",
+            help="How many different versions of this element do you have?"
         )
         
         # Create tabs for each version
@@ -205,6 +267,13 @@ for feature_name, feature_key, description in features:
                 
                 # Upload for each section
                 st.markdown(f"<p style='color:#ffffff; font-weight:600; margin-top:10px;'>Upload for each section:</p>", unsafe_allow_html=True)
+                
+                # Demo reminder
+                st.markdown(f"""
+                <p style='color:#FBC02D; font-size:12px; font-style:italic; margin-bottom:15px;'>
+                  ⚠️ Demo only - files won't actually be saved
+                </p>
+                """, unsafe_allow_html=True)
                 
                 section_cols = st.columns(min(3, len(sections)))
                 for s_idx, section in enumerate(sections):
@@ -231,12 +300,24 @@ for feature_name, feature_key, description in features:
 # Special features section
 st.markdown("<h2 style='margin-top:40px;'>Additional Features</h2>", unsafe_allow_html=True)
 
+st.markdown("""
+<div class="help-tooltip">
+  💡 <strong>Spatialization:</strong> Upload different stereo mixes (narrow 60s-style vs wide modern). Listeners can toggle between spatial presentations.
+</div>
+""", unsafe_allow_html=True)
+
 col1, col2 = st.columns(2)
 
 with col1:
     with st.expander("**🎛️ SPATIALIZATION (Mixing)**", expanded=False):
         st.markdown("<div class='section-header'>🎛️ SPATIALIZATION</div>", unsafe_allow_html=True)
         st.markdown("<p style='color:#8b92a8;'>Upload different spatial mixes (narrow/wide stereo imaging)</p>", unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <p style='color:#FBC02D; font-size:12px; font-style:italic; margin-bottom:15px;'>
+          ⚠️ Demo only - files won't actually be saved
+        </p>
+        """, unsafe_allow_html=True)
         
         st.markdown("**Narrow Mix (60s Vibe)**")
         for s_idx, section in enumerate(sections):
@@ -259,6 +340,12 @@ with col2:
         st.markdown("<div class='section-header'>🎼 REFERENCE MIX</div>", unsafe_allow_html=True)
         st.markdown("<p style='color:#8b92a8;'>Upload a reference mix (optional - helps contributors understand your vision)</p>", unsafe_allow_html=True)
         
+        st.markdown(f"""
+        <p style='color:#FBC02D; font-size:12px; font-style:italic; margin-bottom:15px;'>
+          ⚠️ Demo only - files won't actually be saved
+        </p>
+        """, unsafe_allow_html=True)
+        
         ref_mix = st.file_uploader(
             "Full Track Reference",
             type=["wav", "aiff", "mp3"],
@@ -271,7 +358,7 @@ st.markdown("<h2 style='margin-top:40px;'>Upload Summary</h2>", unsafe_allow_htm
 total_uploads = len(st.session_state.uploads)
 if total_uploads > 0:
     st.markdown(
-        f"<div class='status-badge status-complete'>✓ {total_uploads} files uploaded</div>",
+        f"<div class='status-badge status-complete'>✓ {total_uploads} files uploaded (demo only)</div>",
         unsafe_allow_html=True
     )
 else:
@@ -280,17 +367,17 @@ else:
         unsafe_allow_html=True
     )
 
-# Action buttons
+# Action buttons - disabled for demo
 st.markdown("<div style='margin-top:30px;'></div>", unsafe_allow_html=True)
 col1, col2, col3, col4 = st.columns([2, 1, 1, 1])
 
 with col1:
-    if st.button("💾 Save Draft", use_container_width=True):
-        st.success("Draft saved successfully!")
+    if st.button("💾 Save Draft (Demo)", use_container_width=True, disabled=True):
+        pass
 
 with col2:
-    if st.button("👁️ Preview", use_container_width=True):
-        st.info("Preview feature coming soon!")
+    if st.button("👁️ Preview (Demo)", use_container_width=True, disabled=True):
+        pass
 
 with col3:
     if st.button("🔄 Reset", use_container_width=True):
@@ -298,21 +385,20 @@ with col3:
         st.rerun()
 
 with col4:
-    if st.button("🚀 Publish", use_container_width=True, type="primary"):
-        if total_uploads > 0:
-            st.success("🎉 Track published! Contributors can now submit their versions.")
-        else:
-            st.error("Please upload at least one stem before publishing.")
+    if st.button("🚀 Publish (Demo)", use_container_width=True, type="primary", disabled=True):
+        pass
 
 # Footer info
 st.markdown("""
 <div style="text-align:center; margin-top:60px; padding:20px; background:rgba(255,255,255,0.02); border-radius:12px;">
   <div style="color:#8b92a8; font-size:13px; font-family:'Inter', sans-serif; margin-bottom:10px; font-weight:600;">
-    💡 PRO TIP
+    💡 WHAT YOU JUST SAW
   </div>
   <div style="color:#6b7280; font-size:12px; font-family:'Inter', sans-serif; line-height:1.6;">
-    The platform will automatically detect alternate versions based on your uploads.<br>
-    Contributors will have access to these stems for the specified period to create their own versions.
+    This is how artists would upload modular stems and define which versions listeners can toggle between.<br>
+    The platform automatically detects alternate versions based on uploads.<br><br>
+    <strong style="color:#4CAF50;">Want to try the real thing?</strong><br>
+    Complete the survey and opt-in to receive a fully functional prototype when it's ready.
   </div>
 </div>
 """, unsafe_allow_html=True)
